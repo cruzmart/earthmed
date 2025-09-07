@@ -17,11 +17,9 @@ export default function FilterBox() {
     <div className="relative">
        {/* Filter Icon Button */}
       {/* Filter Button */}
-      <button onClick={() => setIsOpen(true)}>
-        {/* Icon with hover effect */}
-        <FaFilter className="w-6 h-6 text-green-500 hover:text-green-600 transition-colors" />
-      </button>
 
+      <FaFilter onClick={() => setIsOpen(true)} className="w-7 h-7 text-green-500 hover:text-green-600  transition-colors" />
+   
       {/* Only show blur + modal if open */}
       {isOpen && (
         <>
