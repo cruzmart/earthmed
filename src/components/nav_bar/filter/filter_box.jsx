@@ -18,7 +18,7 @@ export default function FilterBox() {
        {/* Filter Icon Button */}
       {/* Filter Button */}
 
-      <FaFilter onClick={() => setIsOpen(true)} className="w-7 h-7 text-green-500 hover:text-green-600  transition-colors" />
+      <FaFilter onClick={() => setIsOpen(true)} className="w-5 h-5 text-black hover:text-green-600  transition-colors" />
    
       {/* Only show blur + modal if open */}
       {isOpen && (
