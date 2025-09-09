@@ -1,6 +1,6 @@
 import { FaTimes, FaCheck, FaTimesCircle } from "react-icons/fa";
 import { useState } from "react";
-import LeafImg from "../../../assets/leaflog.svg"; // notice the ./ for same folder
+import LeafImg from "../../../assets/leaflog.svg";
 
 export default function FilterModal({ initialFilters, onApply, onClose }) {
   const [tempFilters, setTempFilters] = useState(initialFilters);
@@ -25,7 +25,8 @@ export default function FilterModal({ initialFilters, onApply, onClose }) {
   };
 
   return (
-    <div className="fixed z-50 top-6 right-5 lg:right-40 bg-white rounded-2xl shadow-xl border border-gray-100 w-96 p-6">
+    <div className="fixed z-50 top-6 right-5 bg-white rounded-2xl shadow-xl border border-gray-100 w-96 p-6">
+      
       {/* Close Button */}
       <button
         onClick={onClose}

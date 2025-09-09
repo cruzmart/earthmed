@@ -73,12 +73,13 @@ button:focus-visible {
 /* This is for that dumb swiper*/
 @layer components {
   /* All swiper slides scale/fade by default */
+  
   .swiper-slide {
-    @apply transform scale-80 opacity-70 transition-transform duration-300;
+    @apply pointer-events-none transform shadow-md scale-80 opacity-70 transition-transform duration-300;
   }
 
   /* Active slide pops out */
   .swiper-slide-active {
-    @apply scale-100 opacity-100 z-10;
+    @apply pointer-events-auto scale-100 opacity-100 z-10;
   }
 }
