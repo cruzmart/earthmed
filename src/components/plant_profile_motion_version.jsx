@@ -23,12 +23,14 @@ export default function PlantProfileCardAnimated({ plant = defaultPlant }) {
       transition={{ duration: 0.5 }}
       className="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6 relative font-sans"
     >
+      {/* Image Of the Plant */}
       <img
         src={plant.imageUrl}
         alt={plant.name}
         className="w-24 h-24 rounded-full object-cover absolute top-6 right-6"
       />
 
+      {/* Name and Scientific Name Of The Plant */}
       <div className="pr-32">
         <h1 className="text-2xl font-semibold">{plant.name}</h1>
         <p className="text-sm text-gray-500 italic mt-1">{plant.scientificName}</p>
@@ -89,11 +91,14 @@ export default function PlantProfileCardAnimated({ plant = defaultPlant }) {
           </AnimatePresence>
         </div>
 
+
+        {/* Found In Nature */}
         <div>
           <h2 className="text-sm font-semibold">Found in Nature</h2>
           <p className="text-sm text-gray-700 mt-1">{plant.foundInNature}</p>
         </div>
 
+         {/* Citations in Nature */}
         <div>
           <h2 className="text-sm font-semibold">Citation</h2>
           <p className="text-sm italic text-gray-600 mt-1">{plant.citation}</p>

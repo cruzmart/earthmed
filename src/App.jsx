@@ -37,7 +37,8 @@ function App() {
       <NavBar isOpen={isFilterOpen} setIsOpen={setIsFilterOpen} />
       <div className={isFilterOpen ? "blur-sm pointer-events-none" : ""}>
         <PlantsSlider plants={plants} />
-
+       
+        
       </div>
 
       {/* Modal Overlay */}

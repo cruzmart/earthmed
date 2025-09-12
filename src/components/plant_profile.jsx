@@ -1,8 +1,9 @@
 
 import React, { useState } from "react";
 
-
-// Using this for debugging purposes
+// Made by ChatGPT just for my learning, not going to end up using this in the end product, but
+// to study how to make <div> blocks better svg.
+// Using this for debugging purposes. 
 const defaultPlant = {
   name: "Lavender",
   scientificName: "Lavandula angustifolia",
