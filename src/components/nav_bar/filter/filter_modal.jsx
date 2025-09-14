@@ -43,7 +43,7 @@ export default function FilterModal({ initialFilters, onApply, onClose }) {
 
       {/* Filter Rows */}
       <div className="space-y-3">
-        {["Organ", "Disease", "Name", "Location"].map((label) => (
+        {["Name", "Benefit", "Description", "Location"].map((label) => (
           <div key={label} className="flex items-center justify-between">
             <label className="text-sm font-medium text-gray-700 w-24">{label}:</label>
             <input
@@ -68,7 +68,7 @@ export default function FilterModal({ initialFilters, onApply, onClose }) {
             className="w-full"
           />
           <span className="text-sm text-gray-600 mt-1">
-            Max Cost: ${tempFilters.Cost}
+            Max Cost (USD): ${tempFilters.Cost}
           </span>
         </div>
 

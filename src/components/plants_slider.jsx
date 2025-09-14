@@ -38,15 +38,15 @@ export default function PlantsSlider({ plants }) {
           >
             <div onClick={() => console.log(`You clicked plant ${plant.name}`)}>
               <img
-                src={plant.image}
+                src={plant.imageUrl}
                 alt={plant.name}
                 className="w-full h-48 object-cover rounded-md mb-4"
               />
               <h2 className="text-lg font-bold">{plant.name}</h2>
-              <p className="text-sm text-gray-600">{plant.purpose}</p>
-              <p className="text-sm text-gray-600">Price: {plant.price}</p>
-              <p className="text-sm text-gray-600">Location: {plant.location}</p>
+              <p className="text-sm text-gray-600">{plant.description}</p>
               <p className="text-xs text-gray-400 mt-2">{plant.citation}</p>
+              <p className="text-sm text-green-600"> ~ ${plant.cost} USD</p>
+              
             </div>
           </SwiperSlide>
         ))}

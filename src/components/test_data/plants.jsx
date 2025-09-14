@@ -1,37 +1,19 @@
-// These are made for TESTING ONLY, real stuff will be added
+
 export const plants = [
   {
-    name: "Aloe Vera",
-    purpose: "Healing and skincare uses",
-    image: "https://botanix.com/cdn/shop/files/Aloes-vera_Nouvelle-feuille_d1877dd8-ff5a-42b5-b67c-87c4969ddf03.jpg?v=1711979505&width=1946",
-    price: "$10",
-    location: "Garden",
-    citation: "Source A",
+  name: "Lavender",
+  scientificName: "Lavandula angustifolia",
+  imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Single_lavender_flower02.jpg",
+  description: "slender purple flower(s) and a calming with a sweet fragrance",
+  howToGrow: ` 1. Plant lavender in well‑drained soil under full sunlight.
+               2. Water sparingly and avoid over‑fertile soils. 
+               3. Prune after flowering to keep shape.`,
+  healthBenefit:" Healing sedative, antidepressant, antiseptic, antifungal, and relaxant. All benefits to the nervous system",
+  foundInNature: "Native to the Mediterranean region; commonly found on sunny, rocky slopes and scrublands.",
+  citation: `Lavender (Lavandula). Encyclopedia of Herbs, 2021.
+             Silva, L. C. De Melo Alves, et al. "Use of Lavandula angustifolia"
+             Essential Oil as a Complementary Therapy in Adult Health Care: A Scoping Review.
+             Heliyon, vol. 9, no. 5, 2023, p. e15446. https://doi.org/10.1016/j.heliyon.2023.e15446.`,
+  cost: 5.00 
   },
-  {
-    name: "Basil",
-    purpose: "Used in cooking and medicine",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR__C_hZ9Q6gzxBhKezWXycALWa9ICETNwqAg&",
-    price: "$5",
-    location: "Kitchen",
-    citation: "Source B",
-  },
-
-  {
-    name: "Mint",
-    purpose: "Refreshing flavor",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRreads9c1_tqNkPyISruNTcAzDm-Lwn0e4ow&s",
-    price: "$6",
-    location: "Herb Garden",
-    citation: "Source C",
-  },
-    {
-    name: "Mint",
-    purpose: "Refreshing flavor",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRreads9c1_tqNkPyISruNTcAzDm-Lwn0e4ow&s",
-    price: "$6",
-    location: "Herb Garden",
-    citation: "Source C",
-  },
-  
 ];
