@@ -11,9 +11,9 @@ export default function FilterModal({ initialFilters, onApply, onClose }) {
 
   const handleClear = () => {
     setTempFilters({
-      Organ: "",
-      Disease: "",
       Name: "",
+      Benefit: "",
+      Description: "",
       Location: "",
       Cost: 0
     });
