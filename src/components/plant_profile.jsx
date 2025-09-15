@@ -15,14 +15,13 @@ export const deafultPlant = [
     healthBenefit: "",
     foundInNature: "",
     citation: "",
+    cost: 0,
   },
 ];
 
 export default function PlantProfileCard({ plant = deafultPlant }) {
   const [showDesc, setShowDesc] = useState(false);
   const [showGrow, setShowGrow] = useState(false);
-
-  plant = plants[0];
 
   return (
     <motion.div
