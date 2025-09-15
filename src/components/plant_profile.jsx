@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import {plants} from "./test_data/plants"
+//import {plants} from "./test_data/plants"
+import {plants} from "../data/plants"
 
 // These is going to be used for debugging purposes, than added to actually be part of something
 export const deafultPlant = [

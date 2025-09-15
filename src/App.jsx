@@ -6,19 +6,20 @@ import './App.css'
 import NavBar from './components/nav_bar/nav_bar'
 import PlantsSlider from './components/plants_slider'
 import FilterModal from './components/nav_bar/filter/filter_modal'
-import {plants} from "./components/test_data/plants"
 import PlantProfileCard from './components/plant_profile'
+import {plants} from './data/plants'
 
 
 function App() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState({
-    Organ: "",
-    Disease: "",
-    Name: "",
-    Location: "",
-    Cost: 0
+      Name: "",
+      Benefit: "",
+      Description: "",
+      Location: "",
+      Cost: 0
   });
+
 
   // return (
   //   <> <PlantProfileCard/></>
