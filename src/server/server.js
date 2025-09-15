@@ -16,7 +16,7 @@ const dbConfig = {
   database: "plantsdb",
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
 };
 const pool = mysql.createPool(dbConfig);
 
@@ -78,7 +78,6 @@ app.post("/api/filter", async (req, res) => {
     res.status(500).json({ error: "Failed to filter plants" });
   }
 });
-
 
 const PORT = 3001;
 app.listen(PORT, () => {

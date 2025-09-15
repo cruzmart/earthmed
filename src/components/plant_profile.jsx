@@ -2,19 +2,19 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 //import {plants} from "./test_data/plants"
-import {plants} from "../data/plants"
+import { plants } from "../data/plants";
 
 // These is going to be used for debugging purposes, than added to actually be part of something
 export const deafultPlant = [
   {
-  name: "",
-  scientificName: "",
-  imageUrl: "",
-  description: "",
-  howToGrow: "",             
-  healthBenefit:"",
-  foundInNature: "",
-  citation: ""
+    name: "",
+    scientificName: "",
+    imageUrl: "",
+    description: "",
+    howToGrow: "",
+    healthBenefit: "",
+    foundInNature: "",
+    citation: "",
   },
 ];
 
@@ -41,7 +41,9 @@ export default function PlantProfileCard({ plant = deafultPlant }) {
       {/* Name and Scientific Name Of The Plant */}
       <div className="pr-32">
         <h1 className="text-2xl font-semibold">{plant.name}</h1>
-        <p className="text-sm text-gray-500 italic mt-1">{plant.scientificName}</p>
+        <p className="text-sm text-gray-500 italic mt-1">
+          {plant.scientificName}
+        </p>
       </div>
 
       {/*Space this part out a bit*/}
@@ -54,22 +56,25 @@ export default function PlantProfileCard({ plant = deafultPlant }) {
       </div>
 
       <div className="mt-4 space-y-4">
-
         {/* Description toggle with animation */}
         <div>
           <button
-            onClick={() => setShowDesc(s => !s)}
+            onClick={() => setShowDesc((s) => !s)}
             className="text-sm font-medium text-blue-600 hover:underline inline-flex items-center gap-2"
           >
             Description
-            <span className={`${showDesc ? 'rotate-180' : ''} inline-block transition-transform`}>&#9660;</span>
+            <span
+              className={`${showDesc ? "rotate-180" : ""} inline-block transition-transform`}
+            >
+              &#9660;
+            </span>
           </button>
           <AnimatePresence>
             {showDesc && (
               <motion.div
                 key="desc"
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
                 className="mt-2 overflow-hidden"
@@ -85,18 +90,22 @@ export default function PlantProfileCard({ plant = deafultPlant }) {
         {/* How to Grow toggle with animation */}
         <div>
           <button
-            onClick={() => setShowGrow(s => !s)}
+            onClick={() => setShowGrow((s) => !s)}
             className="text-sm font-medium text-blue-600 hover:underline inline-flex items-center gap-2"
           >
             How to Grow
-            <span className={`${showGrow ? 'rotate-180' : ''} inline-block transition-transform`}>&#9660;</span>
+            <span
+              className={`${showGrow ? "rotate-180" : ""} inline-block transition-transform`}
+            >
+              &#9660;
+            </span>
           </button>
           <AnimatePresence>
             {showGrow && (
               <motion.div
                 key="grow"
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
                 className="mt-2 overflow-hidden"
@@ -109,14 +118,13 @@ export default function PlantProfileCard({ plant = deafultPlant }) {
           </AnimatePresence>
         </div>
 
-
         {/* Found In Nature */}
         <div>
           <h2 className="text-sm font-semibold">Found in Nature</h2>
           <p className="text-sm text-gray-700 mt-1">{plant.foundInNature}</p>
         </div>
 
-         {/* Citations in Nature */}
+        {/* Citations in Nature */}
         <div>
           <h2 className="text-sm font-semibold">Citation</h2>
           <p className="text-sm italic text-gray-600 mt-1">{plant.citation}</p>

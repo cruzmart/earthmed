@@ -7,7 +7,7 @@ export async function initdb() {
     host: "localhost",
     user: "plants123",
     password: "@+Plants1378201-",
-    database: "plantsdb"
+    database: "plantsdb",
   });
 
   // Ensure table exists
