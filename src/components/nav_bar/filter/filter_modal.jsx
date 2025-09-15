@@ -6,7 +6,12 @@ export default function FilterModal({ initialFilters, onApply, onClose }) {
   const [tempFilters, setTempFilters] = useState(initialFilters);
 
   const handleChange = (label, value) => {
-    setTempFilters(prev => ({ ...prev, [label]: value }));
+    // Convert Cost to number
+    if (label === "Cost") {
+      setTempFilters(prev => ({ ...prev, [label]: Number(value) }));
+    } else {
+      setTempFilters(prev => ({ ...prev, [label]: value }));
+    }
   };
 
   const handleClear = () => {
@@ -20,8 +25,17 @@ export default function FilterModal({ initialFilters, onApply, onClose }) {
   };
 
   const handleApply = () => {
-    onApply(tempFilters); // persist filters in parent
-    onClose();            // close modal
+    // Ensure all keys exist and Cost is a number
+    const cleanedFilters = {
+      Name: tempFilters.Name || "",
+      Benefit: tempFilters.Benefit || "",
+      Description: tempFilters.Description || "",
+      Location: tempFilters.Location || "",
+      Cost: Number(tempFilters.Cost) || 0
+    };
+
+    onApply(cleanedFilters);
+    onClose();
   };
 
   return (
