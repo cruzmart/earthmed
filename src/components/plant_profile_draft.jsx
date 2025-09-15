@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 
 // Made by ChatGPT just for my learning, not going to end up using this in the end product, but
 // to study how to make <div> blocks better svg.
-// Using this for debugging purposes. 
+// Using this for debugging purposes.
 const defaultPlant = {
   name: "Lavender",
   scientificName: "Lavandula angustifolia",
@@ -15,7 +14,7 @@ const defaultPlant = {
     "Plant lavender in well‑drained soil under full sunlight. Water sparingly and avoid over‑fertile soils. Prune after flowering to keep shape.",
   foundInNature:
     "Native to the Mediterranean region; commonly found on sunny, rocky slopes and scrublands.",
-  citation: '"Lavender (Lavandula)." Encyclopedia of Herbs, 2021.'
+  citation: '"Lavender (Lavandula)." Encyclopedia of Herbs, 2021.',
 };
 
 export default function PlantProfileCard_Draft({ plant = defaultPlant }) {
@@ -35,7 +34,9 @@ export default function PlantProfileCard_Draft({ plant = defaultPlant }) {
       {/* header (leave room for image) */}
       <div className="pr-32">
         <h1 className="text-2xl font-semibold">{plant.name}</h1>
-        <p className="text-sm text-gray-500 italic mt-1">{plant.scientificName}</p>
+        <p className="text-sm text-gray-500 italic mt-1">
+          {plant.scientificName}
+        </p>
       </div>
 
       <div className="mt-4 space-y-4">
@@ -49,7 +50,7 @@ export default function PlantProfileCard_Draft({ plant = defaultPlant }) {
           >
             Description
             <svg
-              className={`w-4 h-4 transition-transform ${showDesc ? 'transform rotate-180' : ''}`}
+              className={`w-4 h-4 transition-transform ${showDesc ? "transform rotate-180" : ""}`}
               viewBox="0 0 20 20"
               fill="currentColor"
               aria-hidden="true"
@@ -84,7 +85,7 @@ export default function PlantProfileCard_Draft({ plant = defaultPlant }) {
           >
             How to Grow
             <svg
-              className={`w-4 h-4 transition-transform ${showGrow ? 'transform rotate-180' : ''}`}
+              className={`w-4 h-4 transition-transform ${showGrow ? "transform rotate-180" : ""}`}
               viewBox="0 0 20 20"
               fill="currentColor"
               aria-hidden="true"

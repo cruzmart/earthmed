@@ -2,26 +2,27 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
- // Helper to create invisible filler slides
-  const createEmptySlides = (count, side) =>
-    Array(count)
-      .fill(0)
-      .map((_, i) => (
-        <SwiperSlide
-          key={`${side}-filler-${i}`}
-          className="w-64 flex-shrink-0 p-4 opacity-0 pointer-events-none"
-        />
-      ));
+// Helper to create invisible filler slides
+const createEmptySlides = (count, side) => {
+  if (count <= 0) return []; // return empty array instead of invalid length
+  return Array.from({ length: count }).map((_, i) => (
+    <SwiperSlide
+      key={`${side}-filler-${i}`}
+      className="w-64 flex-shrink-0 p-4 opacity-0 pointer-events-none"
+    />
+  ));
+};
 
 export default function PlantsSlider({ plants }) {
-
+  // Ensure plants is always an array
+  const plantList = Array.isArray(plants) ? plants : [];
   const desiredSlides = 3; // how many slides you want visible
-  const fillerCount = Math.max(desiredSlides - plants.length, 0);
+  const fillerCount = Math.max(desiredSlides - plantList.length, 0);
 
   return (
     <div className="w-full max-w-6xl mx-auto overflow-visible">
       <Swiper
-        slidesPerView={desiredSlides}       // use natural slide width
+        slidesPerView={desiredSlides}
         spaceBetween={10}
         centeredSlides={true}
         loop={false}
@@ -31,10 +32,10 @@ export default function PlantsSlider({ plants }) {
         {createEmptySlides(Math.floor(fillerCount / 2), "left")}
 
         {/* Real slides */}
-        {plants.map((plant, index) => (
+        {plantList.map((plant, index) => (
           <SwiperSlide
             key={index}
-            className="w-64 flex-shrink-0 p-4  rounded-lg shadow-md cursor-pointer transform transition-transform duration-300  active:scale-95"
+            className="w-64 flex-shrink-0 p-4 rounded-lg shadow-md cursor-pointer transform transition-transform duration-300 active:scale-95"
           >
             <div onClick={() => console.log(`You clicked plant ${plant.name}`)}>
               <img
@@ -46,7 +47,6 @@ export default function PlantsSlider({ plants }) {
               <p className="text-sm text-gray-600">{plant.description}</p>
               <p className="text-xs text-gray-400 mt-2">{plant.citation}</p>
               <p className="text-sm text-green-600"> ~ ${plant.cost} USD</p>
-              
             </div>
           </SwiperSlide>
         ))}
