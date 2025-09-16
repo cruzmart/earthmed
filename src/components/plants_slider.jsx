@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import PlantProfileCard from "./plant_profile";
 
 // Helper to create invisible filler slides
 const createEmptySlides = (count, side) => {
-  if (count <= 0) return []; // return empty array instead of invalid length
+  if (count <= 0) return [];
   return Array.from({ length: count }).map((_, i) => (
     <SwiperSlide
       key={`${side}-filler-${i}`}
@@ -14,13 +15,14 @@ const createEmptySlides = (count, side) => {
 };
 
 export default function PlantsSlider({ plants }) {
-  // Ensure plants is always an array
+  const [selectedPlant, setSelectedPlant] = useState(null); // Track clicked plant
+
   const plantList = Array.isArray(plants) ? plants : [];
-  const desiredSlides = 3; // how many slides you want visible
+  const desiredSlides = 3;
   const fillerCount = Math.max(desiredSlides - plantList.length, 0);
 
   return (
-    <div className="w-full max-w-6xl mx-auto overflow-visible">
+    <div className="w-full max-w-6xl mx-auto overflow-visible relative">
       <Swiper
         slidesPerView={desiredSlides}
         spaceBetween={10}
@@ -37,7 +39,7 @@ export default function PlantsSlider({ plants }) {
             key={index}
             className="w-64 flex-shrink-0 p-4 rounded-lg shadow-md cursor-pointer transform transition-transform duration-300 active:scale-95"
           >
-            <div onClick={() => console.log(`You clicked plant ${plant.name}`)}>
+            <div onClick={() => setSelectedPlant(plant)}>
               <img
                 src={plant.imageUrl}
                 alt={plant.name}
@@ -54,6 +56,24 @@ export default function PlantsSlider({ plants }) {
         {/* Right filler slides */}
         {createEmptySlides(Math.ceil(fillerCount / 2), "right")}
       </Swiper>
+
+      {/* Plant profile modal */}
+      {selectedPlant && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="relative">
+            {/* Close button */}
+            <button
+              onClick={() => setSelectedPlant(null)}
+              className="absolute -top-4 -right-4 z-50 bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center shadow hover:bg-gray-300"
+            >
+              ✕
+            </button>
+
+            {/* Plant profile card */}
+            <PlantProfileCard plant={selectedPlant} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
