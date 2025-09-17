@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Keyboard } from "swiper/modules"; // Import keyboard module
 import "swiper/css";
 import PlantProfileCard from "./plant_profile";
 
@@ -15,7 +16,7 @@ const createEmptySlides = (count, side) => {
 };
 
 export default function PlantsSlider({ plants }) {
-  const [selectedPlant, setSelectedPlant] = useState(null); // Track clicked plant
+  const [selectedPlant, setSelectedPlant] = useState(null);
 
   const plantList = Array.isArray(plants) ? plants : [];
   const desiredSlides = 3;
@@ -29,6 +30,10 @@ export default function PlantsSlider({ plants }) {
         centeredSlides={true}
         loop={false}
         grabCursor={true}
+        keyboard={{ enabled: true, onlyInViewport: true }} // keyboard control
+        modules={[Keyboard]}
+        speed={500} // smooth slide animation (0.5s)
+        className="transition-transform ease-in-out"
       >
         {/* Left filler slides */}
         {createEmptySlides(Math.floor(fillerCount / 2), "left")}
