@@ -30,8 +30,9 @@ export default function PlantsSlider({ plants }) {
         centeredSlides={true}
         loop={false}
         grabCursor={true}
-        keyboard={{ enabled: true, onlyInViewport: true }} // keyboard control
+        
         modules={[Keyboard]}
+        keyboard={{ enabled: true}} // keyboard control
         speed={500} // smooth slide animation (0.5s)
         className="transition-transform ease-in-out"
       >
