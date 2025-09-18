@@ -31,7 +31,7 @@ export default function AuthPage({ onAuthSuccess }) {
 
 
       localStorage.setItem("user_id", data.user.id);
-      onAuthSuccess?.(data.user.id); // pass userId back up
+      onAuthSuccess?.(data.user.id); // pass user_id back up
     } catch (err) {
       setError(err.message);
     }
