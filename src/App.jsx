@@ -3,6 +3,7 @@ import "./App.css";
 import NavBar from "./components/nav_bar/nav_bar";
 import PlantsSlider from "./components/plants_slider";
 import FilterModal from "./components/nav_bar/filter/filter_modal";
+import AuthPage from "./components/auth_page";
 
 function App() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -46,7 +47,7 @@ function App() {
       console.error("Failed to fetch filtered plants:", err);
     }
   };
-
+  return (<><AuthPage/></>);
   return (
     <>
       {/* Navbar */}

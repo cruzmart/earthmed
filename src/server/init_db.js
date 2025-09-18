@@ -27,5 +27,28 @@ export async function initdb() {
     ) ENGINE=InnoDB;
   `);
 
+    // Ensure accounts table exists
+  await connection.execute(`
+    CREATE TABLE IF NOT EXISTS accounts (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      firstName VARCHAR(100),
+      lastName VARCHAR(100),
+      username VARCHAR(100) UNIQUE NOT NULL,
+      password VARCHAR(255) NOT NULL
+    ) ENGINE=InnoDB;
+  `);
+
+  // Ensure favorites table exists
+  await connection.execute(`
+    CREATE TABLE IF NOT EXISTS favorites (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT NOT NULL,
+      plant_id INT NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES accounts(id) ON DELETE CASCADE,
+      FOREIGN KEY (plant_id) REFERENCES plants(id) ON DELETE CASCADE,
+      UNIQUE KEY unique_fav (user_id, plant_id)
+    ) ENGINE=InnoDB;
+  `);
+
   return connection;
 }
