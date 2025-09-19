@@ -1,4 +1,4 @@
-// src/server/server.js
+
 import express from "express";
 import cors from "cors";
 import mysql from "mysql2/promise";
@@ -82,7 +82,7 @@ app.post("/api/signup", async (req, res) => {
       "INSERT INTO accounts (firstName, lastName, username, password) VALUES (?, ?, ?, ?)",
       [firstName || "", lastName || "", username, password]
     );
-    res.json({ message: "Signup successful", user_id: result.insertId });
+    res.json({ message: "Signup successful", user: result[0]});
      
     
   } catch (err) {

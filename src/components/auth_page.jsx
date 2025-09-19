@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 import LeafImg from "../assets/leaflog.svg"
-import { data } from "framer-motion/client";
 
 export default function AuthPage({ onAuthSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -30,15 +29,15 @@ export default function AuthPage({ onAuthSuccess }) {
       if (!response.ok) {throw new Error(data.error || "Something went wrong")};
 
 
-      localStorage.setItem("user_id", data.user.id);
-      onAuthSuccess?.(data.user.id); // pass user_id back up
+      localStorage.setItem("user", data.user);
+      onAuthSuccess?.(data.user); // pass user_id back up
     } catch (err) {
       setError(err.message);
     }
   };
 
   const handleGuest = () => {
-    localStorage.removeItem("user_id"); // clear any user session
+    localStorage.removeItem("user"); // clear any user session
     onAuthSuccess?.(null); // guest mode
   };
 
