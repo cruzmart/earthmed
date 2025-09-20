@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-import LeafImg from "../assets/leaflog.svg"
+import LeafImg from "../assets/leaflog.svg";
 
 export default function AuthPage({ onAuthSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
-  const [form, setForm] = useState({ firstName: "", lastName: "", username: "", password: "" });
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    username: "",
+    password: "",
+  });
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -25,9 +30,10 @@ export default function AuthPage({ onAuthSuccess }) {
       });
 
       const data = await response.json();
-      
-      if (!response.ok) {throw new Error(data.error || "Something went wrong")};
 
+      if (!response.ok) {
+        throw new Error(data.error || "Something went wrong");
+      }
 
       localStorage.setItem("user", data.user);
       onAuthSuccess?.(data.user); // pass user_id back up

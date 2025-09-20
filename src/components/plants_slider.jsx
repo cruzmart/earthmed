@@ -29,7 +29,9 @@ export default function PlantsSlider({ plants, user }) {
     const fetchFavorites = async () => {
       if (!user) return;
       try {
-        const res = await fetch(`http://localhost:3001/api/favorites/${user.id}`);
+        const res = await fetch(
+          `http://localhost:3001/api/favorites/${user.id}`,
+        );
         const data = await res.json();
         setFavorites(data.map((p) => p.id));
       } catch (err) {
@@ -93,7 +95,9 @@ export default function PlantsSlider({ plants, user }) {
               >
                 <FaHeart
                   className={`w-6 h-6 ${
-                    favorites.includes(plant.id) ? "text-red-500" : "text-gray-400"
+                    favorites.includes(plant.id)
+                      ? "text-red-500"
+                      : "text-gray-400"
                   }`}
                 />
               </button>

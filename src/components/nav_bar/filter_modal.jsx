@@ -1,11 +1,35 @@
 import { FaTimes, FaCheck, FaTimesCircle } from "react-icons/fa";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import LeafImg from "../../../assets/leaflog.svg";
+import LeafImg from "../../assets/leaflog.svg";
 
+/**
+ * FilterModal component
+ *
+ * A modal popup for applying filters to the plant list.
+ * Includes text inputs for Name, Benefit, Description, Location
+ * and a range input for maximum Cost.
+ * Animations are handled via Framer Motion.
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.initialFilters - The current applied filters when the modal opens
+ * @param {Function} props.onApply - Callback to apply filters to the plant list
+ * @param {Function} props.onClose - Callback to close the modal
+ *
+ * @returns {JSX.Element} The modal UI
+ */
 export default function FilterModal({ initialFilters, onApply, onClose }) {
+  // Local state to hold temporary filter changes before applying
   const [tempFilters, setTempFilters] = useState(initialFilters);
 
+  /**
+   * Handle changes to filter inputs
+   * Updates tempFilters state dynamically based on input label
+   * Converts "Cost" to a number
+   *
+   * @param {string} label - The filter label (Name, Benefit, Description, Location, Cost)
+   * @param {string|number} value - The new value entered by the user
+   */
   const handleChange = (label, value) => {
     if (label === "Cost") {
       setTempFilters((prev) => ({ ...prev, [label]: Number(value) }));
@@ -14,6 +38,7 @@ export default function FilterModal({ initialFilters, onApply, onClose }) {
     }
   };
 
+  /** Clears all filter inputs to default values */
   const handleClear = () => {
     setTempFilters({
       Name: "",
@@ -24,6 +49,10 @@ export default function FilterModal({ initialFilters, onApply, onClose }) {
     });
   };
 
+  /**
+   * Apply filters by sending cleaned-up filter object to parent component
+   * Then closes the modal
+   */
   const handleApply = () => {
     const cleanedFilters = {
       Name: tempFilters.Name || "",
@@ -40,6 +69,7 @@ export default function FilterModal({ initialFilters, onApply, onClose }) {
   return (
     <AnimatePresence>
       <motion.div
+        // Entrance/exit animation for modal
         initial={{ opacity: 0, scale: 0.8, y: -20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.8, y: -20 }}
@@ -54,7 +84,7 @@ export default function FilterModal({ initialFilters, onApply, onClose }) {
           <FaTimes size={16} />
         </button>
 
-        {/* Leaf Image + Animation Of The Leaf*/}
+        {/* Leaf Image with subtle animation */}
         <motion.img
           src={LeafImg}
           alt="Leaf Icon"
@@ -64,7 +94,7 @@ export default function FilterModal({ initialFilters, onApply, onClose }) {
           className="w-10 h-10 object-contain mb-4 mx-auto"
         />
 
-        {/* Filter Rows + Animation for each row */}
+        {/* Filter Inputs */}
         <div className="space-y-3">
           {["Name", "Benefit", "Description", "Location"].map((label, i) => (
             <motion.div
@@ -87,7 +117,7 @@ export default function FilterModal({ initialFilters, onApply, onClose }) {
             </motion.div>
           ))}
 
-          {/* Cost Range Filter + Also animation of it */}
+          {/* Cost Range Slider */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -110,7 +140,7 @@ export default function FilterModal({ initialFilters, onApply, onClose }) {
             </span>
           </motion.div>
 
-          {/* Apply and Clear Buttons  w/ Animation too*/}
+          {/* Action Buttons: Clear & Apply */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

@@ -1,4 +1,3 @@
-
 import express from "express";
 import cors from "cors";
 import mysql from "mysql2/promise";
@@ -72,21 +71,17 @@ app.post("/api/filter", async (req, res) => {
 
 // --- Signup ---
 app.post("/api/signup", async (req, res) => {
-
-  
   const { firstName, lastName, username, password } = req.body;
-  if (!username || !password) return res.status(400).json({ error: "Username & password required" });
+  if (!username || !password)
+    return res.status(400).json({ error: "Username & password required" });
 
   try {
     const [result] = await pool.execute(
       "INSERT INTO accounts (firstName, lastName, username, password) VALUES (?, ?, ?, ?)",
-      [firstName || "", lastName || "", username, password]
+      [firstName || "", lastName || "", username, password],
     );
-    res.json({ message: "Signup successful", user: result[0]});
-     
-    
+    res.json({ message: "Signup successful", user: result[0] });
   } catch (err) {
-    
     if (err.code === "ER_DUP_ENTRY") {
       res.status(400).json({ error: "Username already exists" });
     } else {
@@ -99,17 +94,19 @@ app.post("/api/signup", async (req, res) => {
 // --- Login ---
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
-  if (!username || !password) return res.status(400).json({ error: "Username & password required" });
+  if (!username || !password)
+    return res.status(400).json({ error: "Username & password required" });
 
   try {
     const [rows] = await pool.execute(
       "SELECT id, firstName, lastName, username FROM accounts WHERE username=? AND password=?",
-      [username, password]
+      [username, password],
     );
 
     console.log(rows);
 
-    if (rows.length === 0) return res.status(401).json({ error: "Invalid credentials" });
+    if (rows.length === 0)
+      return res.status(401).json({ error: "Invalid credentials" });
 
     res.json({ message: "Login successful", user: rows[0] }); // here we got the user data which will be a dictionary ish thing
   } catch (err) {
@@ -127,7 +124,7 @@ app.get("/api/favorites/:user_id", async (req, res) => {
       `SELECT p.* FROM plants p
        JOIN favorites f ON p.id = f.plant_id
        WHERE f.user_id = ?`,
-      [user_id]
+      [user_id],
     );
     res.json(rows); // returns all of the rows of plants the user has favourited
   } catch (err) {
@@ -139,22 +136,29 @@ app.get("/api/favorites/:user_id", async (req, res) => {
 // --- Toggle favorite ---
 app.post("/api/favorite/toggle", async (req, res) => {
   const { user_id, plantId } = req.body;
-  if (!user_id || !plantId) return res.status(400).json({ error: "user_id and plantId required" });
+  if (!user_id || !plantId)
+    return res.status(400).json({ error: "user_id and plantId required" });
 
   try {
     // Check if exists
     const [existing] = await pool.execute(
       "SELECT * FROM favorites WHERE user_id=? AND plant_id=?",
-      [user_id, plantId]
+      [user_id, plantId],
     );
 
     if (existing.length) {
       // Remove
-      await pool.execute("DELETE FROM favorites WHERE user_id=? AND plant_id=?", [user_id, plantId]);
+      await pool.execute(
+        "DELETE FROM favorites WHERE user_id=? AND plant_id=?",
+        [user_id, plantId],
+      );
       return res.json({ message: "Removed from favorites", favorite: false });
     } else {
       // Add
-      await pool.execute("INSERT INTO favorites (user_id, plant_id) VALUES (?, ?)", [user_id, plantId]);
+      await pool.execute(
+        "INSERT INTO favorites (user_id, plant_id) VALUES (?, ?)",
+        [user_id, plantId],
+      );
       return res.json({ message: "Added to favorites", favorite: true });
     }
   } catch (err) {
