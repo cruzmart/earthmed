@@ -27,7 +27,7 @@ export async function initdb() {
     ) ENGINE=InnoDB;
   `);
 
-    // Ensure accounts table exists
+  // Ensure accounts table exists
   await connection.execute(`
     CREATE TABLE IF NOT EXISTS accounts (
       id INT AUTO_INCREMENT PRIMARY KEY,
