@@ -84,74 +84,78 @@ export default function FavoritesPage({ user }) {
   if (loading) return <p className="text-center p-6">Loading favorites...</p>;
 
   return (
-    <div className="flex flex-col md:flex-row gap-8 p-6 max-w-6xl mx-auto relative">
-      {/* Favorites List */}
-      <div className="flex-1">
-        <h2 className="text-2xl font-bold mb-4">🌿 Your Favorite Plants</h2>
+    <div className="w-full flex justify-center">
+      <div className="flex flex-col md:flex-row gap-8 p-6 w-full max-w-6xl">
+        {/* Favorites List */}
+        <div className="flex-1">
+          <h2 className="text-2xl font-bold mb-4">🌿 Your Favorite Plants</h2>
 
-        {favorites.length === 0 ? (
-          <p className="text-gray-600">No favorites yet. Go add some plants!</p>
-        ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {favorites.map((plant) => (
-              <div
-                key={plant.id}
-                className="relative bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition cursor-pointer"
-                onClick={() => setSelectedPlant(plant)} // open modal on click
-              >
-                <img
-                  src={plant.imageUrl}
-                  alt={plant.name}
-                  className="w-full h-40 object-cover rounded-md mb-3"
-                />
-                <h3 className="text-lg font-semibold">{plant.name}</h3>
-                <p className="text-sm text-gray-600">{plant.description}</p>
-                <p className="text-green-700 font-medium mt-2">
-                  ${plant.cost} USD
-                </p>
-
-                {/* Unfavorite Button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent opening modal
-                    toggleFavorite(plant.id);
-                  }}
-                  className="absolute top-3 right-3 bg-white rounded-full p-2 shadow hover:scale-110 transition"
+          {favorites.length === 0 ? (
+            <p className="text-gray-600">
+              No favorites yet. Go add some plants!
+            </p>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {favorites.map((plant) => (
+                <div
+                  key={plant.id}
+                  className="relative bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition cursor-pointer"
+                  onClick={() => setSelectedPlant(plant)}
                 >
-                  <FaHeart className="text-red-500 w-5 h-5" />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+                  <img
+                    src={plant.imageUrl}
+                    alt={plant.name}
+                    className="w-full h-40 object-cover rounded-md mb-3"
+                  />
+                  <h3 className="text-lg font-semibold">{plant.name}</h3>
+                  <p className="text-sm text-gray-600">{plant.description}</p>
+                  <p className="text-green-700 font-medium mt-2">
+                    ${plant.cost} USD
+                  </p>
 
-      {/* Cost Summary */}
-      <div className="w-full md:w-64 bg-gray-50 p-6 rounded-lg shadow-md h-fit">
-        <h2 className="text-xl font-bold mb-4">🧾 Summary</h2>
-        <div className="space-y-2">
-          <div className="flex justify-between text-gray-700">
-            <span>Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
-          </div>
-          <div className="flex justify-between text-gray-700">
-            <span>Tax (7%)</span>
-            <span>${tax.toFixed(2)}</span>
-          </div>
-          <hr />
-          <div className="flex justify-between text-lg font-bold">
-            <span>Total</span>
-            <span>${total.toFixed(2)}</span>
-          </div>
+                  {/* Unfavorite Button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(plant.id);
+                    }}
+                    className="absolute top-3 right-3 bg-white rounded-full p-2 shadow hover:scale-110 transition"
+                  >
+                    <FaHeart className="text-red-500 w-5 h-5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
+
+        {/* Cost Summary */}
+        <aside className="w-full md:w-72 bg-gray-50 p-6 rounded-lg shadow-md h-fit self-start">
+          <h2 className="text-xl font-bold mb-4">🧾 Summary</h2>
+          <div className="space-y-2">
+            <div className="flex justify-between text-gray-700">
+              <span>Subtotal</span>
+              <span>${subtotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-gray-700">
+              <span>Tax (7%)</span>
+              <span>${tax.toFixed(2)}</span>
+            </div>
+            <hr />
+            <div className="flex justify-between text-lg font-bold">
+              <span>Total</span>
+              <span>${total.toFixed(2)}</span>
+            </div>
+          </div>
+        </aside>
       </div>
 
       {/* Favorites Modal */}
       {selectedPlant && (
         <FavoritesModal
           plant={selectedPlant}
-          onClose={() => setSelectedPlant(null)} // Close modal
-          onUnfavorite={toggleFavorite} // Allow removing from favorites from modal
+          onClose={() => setSelectedPlant(null)}
+          onUnfavorite={toggleFavorite}
         />
       )}
     </div>

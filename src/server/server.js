@@ -20,7 +20,36 @@ const pool = mysql.createPool(dbConfig);
 
 await initdb();
 
-// --- Get all plants ---
+/**
+ * @typedef {Object} Plant
+ * @property {number} id
+ * @property {string} name
+ * @property {string} scientificName
+ * @property {string} imageUrl
+ * @property {string} description
+ * @property {string} howToGrow
+ * @property {string} healthBenefit
+ * @property {string} foundInNature
+ * @property {string} citation
+ * @property {number} cost
+ */
+
+/**
+ * @typedef {Object} User
+ * @property {number} id
+ * @property {string} firstName
+ * @property {string} lastName
+ * @property {string} username
+ */
+
+/**
+ * GET /api/plants
+ * Fetch all plants in the database.
+ *
+ * @name GetAllPlants
+ * @route {GET} /api/plants
+ * @returns {Promise<Plant[]>} Array of all plants in the database
+ */
 app.get("/api/plants", async (req, res) => {
   try {
     const [rows] = await pool.execute("SELECT * FROM plants");
@@ -31,7 +60,27 @@ app.get("/api/plants", async (req, res) => {
   }
 });
 
-// --- Filter plants ---
+/**
+ * POST /api/filter
+ * Filter plants based on search terms and cost limit.
+ *
+ * @name FilterPlants
+ * @route {POST} /api/filter
+ * @param {Object} req.body
+ * @param {string} [req.body.Name] - Filter by plant name or scientific name
+ * @param {string} [req.body.Benefit] - Filter by health benefits
+ * @param {string} [req.body.Description] - Filter by description keywords
+ * @param {string} [req.body.Location] - Filter by foundInNature
+ * @param {number} [req.body.Cost] - Maximum cost
+ * @returns {Promise<Plant[]>} Array of plants matching filters
+ *
+ * @example
+ * POST /api/filter
+ * {
+ *   "Name": "Mint",
+ *   "Cost": 10
+ * }
+ */
 app.post("/api/filter", async (req, res) => {
   const filters = req.body;
   try {
@@ -69,7 +118,19 @@ app.post("/api/filter", async (req, res) => {
   }
 });
 
-// --- Signup ---
+/**
+ * POST /api/signup
+ * Register a new user account.
+ *
+ * @name Signup
+ * @route {POST} /api/signup
+ * @param {Object} req.body
+ * @param {string} [req.body.firstName] - User's first name
+ * @param {string} [req.body.lastName] - User's last name
+ * @param {string} req.body.username - Unique username
+ * @param {string} req.body.password - User password
+ * @returns {Promise<{message: string, user?: {id: number}}>} Success message and new user ID
+ */
 app.post("/api/signup", async (req, res) => {
   const { firstName, lastName, username, password } = req.body;
   if (!username || !password)
@@ -78,9 +139,9 @@ app.post("/api/signup", async (req, res) => {
   try {
     const [result] = await pool.execute(
       "INSERT INTO accounts (firstName, lastName, username, password) VALUES (?, ?, ?, ?)",
-      [firstName || "", lastName || "", username, password],
+      [firstName || "", lastName || "", username, password]
     );
-    res.json({ message: "Signup successful", user: result[0] });
+    res.json({ message: "Signup successful", user: { id: result.insertId } });
   } catch (err) {
     if (err.code === "ER_DUP_ENTRY") {
       res.status(400).json({ error: "Username already exists" });
@@ -91,7 +152,17 @@ app.post("/api/signup", async (req, res) => {
   }
 });
 
-// --- Login ---
+/**
+ * POST /api/login
+ * Authenticate a user.
+ *
+ * @name Login
+ * @route {POST} /api/login
+ * @param {Object} req.body
+ * @param {string} req.body.username
+ * @param {string} req.body.password
+ * @returns {Promise<{message: string, user?: User}>} Success message and user data
+ */
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password)
@@ -100,64 +171,76 @@ app.post("/api/login", async (req, res) => {
   try {
     const [rows] = await pool.execute(
       "SELECT id, firstName, lastName, username FROM accounts WHERE username=? AND password=?",
-      [username, password],
+      [username, password]
     );
-
-    console.log(rows);
 
     if (rows.length === 0)
       return res.status(401).json({ error: "Invalid credentials" });
 
-    res.json({ message: "Login successful", user: rows[0] }); // here we got the user data which will be a dictionary ish thing
+    res.json({ message: "Login successful", user: rows[0] });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to log in" });
   }
 });
 
-// --- Get user's favorites ---
+/**
+ * GET /api/favorites/:user_id
+ * Get all favorite plants for a specific user.
+ *
+ * @name GetFavorites
+ * @route {GET} /api/favorites/:user_id
+ * @param {string} req.params.user_id
+ * @returns {Promise<Plant[]>} Array of favorited plants
+ */
 app.get("/api/favorites/:user_id", async (req, res) => {
   const { user_id } = req.params;
   try {
-    // We find in the favourites database all of the plants the user has favourited by atching the id of the user and the id that is on the plant in favourites
     const [rows] = await pool.execute(
       `SELECT p.* FROM plants p
        JOIN favorites f ON p.id = f.plant_id
        WHERE f.user_id = ?`,
-      [user_id],
+      [user_id]
     );
-    res.json(rows); // returns all of the rows of plants the user has favourited
+    res.json(rows);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch favorites" });
   }
 });
 
-// --- Toggle favorite ---
+/**
+ * POST /api/favorite/toggle
+ * Add or remove a plant from a user's favorites.
+ *
+ * @name ToggleFavorite
+ * @route {POST} /api/favorite/toggle
+ * @param {Object} req.body
+ * @param {number} req.body.user_id
+ * @param {number} req.body.plantId
+ * @returns {Promise<{message: string, favorite: boolean}>} Status and new favorite state
+ */
 app.post("/api/favorite/toggle", async (req, res) => {
   const { user_id, plantId } = req.body;
   if (!user_id || !plantId)
     return res.status(400).json({ error: "user_id and plantId required" });
 
   try {
-    // Check if exists
     const [existing] = await pool.execute(
       "SELECT * FROM favorites WHERE user_id=? AND plant_id=?",
-      [user_id, plantId],
+      [user_id, plantId]
     );
 
     if (existing.length) {
-      // Remove
       await pool.execute(
         "DELETE FROM favorites WHERE user_id=? AND plant_id=?",
-        [user_id, plantId],
+        [user_id, plantId]
       );
       return res.json({ message: "Removed from favorites", favorite: false });
     } else {
-      // Add
       await pool.execute(
         "INSERT INTO favorites (user_id, plant_id) VALUES (?, ?)",
-        [user_id, plantId],
+        [user_id, plantId]
       );
       return res.json({ message: "Added to favorites", favorite: true });
     }
