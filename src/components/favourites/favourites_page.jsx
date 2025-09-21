@@ -85,7 +85,7 @@ export default function FavoritesPage({ user }) {
 
   return (
     <div className="w-full flex justify-center">
-      <div className="flex flex-col md:flex-row gap-8 p-6 w-full max-w-6xl">
+      <div className="flex flex-col md:flex-row gap-8 p-20 w-full max-w-6xl">
         {/* Favorites List */}
         <div className="flex-1">
           <h2 className="text-2xl font-bold mb-4">🌿 Your Favorite Plants</h2>
