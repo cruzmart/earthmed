@@ -1,8 +1,24 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
+main {
+  flex: 1; /* makes main grow to fill remaining space */
+  width: 100%; /* Ensure it fills the width of the parent */
+  max-width: 100%; /* Avoid any width restrictions */
+  margin: 0 auto; /* Center content horizontally */
   padding: 2rem;
-  text-align: center;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+@media screen and (max-width: 1280px) {
+  main {
+    max-width: 100%; /* Adjust this to avoid cutting off content in smaller screens */
+    margin: 0 auto;
+  }
 }
 
 .logo {
@@ -11,9 +27,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }

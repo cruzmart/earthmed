@@ -3,20 +3,46 @@ import { motion } from "framer-motion";
 
 import LeafImg from "../assets/leaflog.svg";
 
+/**
+ * Authentication page component.
+ *
+ * Handles login, signup, and guest mode with smooth animations.
+ *
+ * @param {Object} props - Component props
+ * @param {(user: object | null) => void} props.onAuthSuccess - Callback triggered on successful login, signup, or guest mode.
+ * - Receives the user object when logged in or `null` when continuing as guest.
+ * @returns {JSX.Element} The rendered authentication page.
+ */
 export default function AuthPage({ onAuthSuccess }) {
+  /** Whether the user is in login mode (true) or signup mode (false). */
   const [isLogin, setIsLogin] = useState(true);
+
+  /**
+   * Form state for authentication.
+   * @type {{ firstName: string, lastName: string, username: string, password: string }}
+   */
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     username: "",
     password: "",
   });
+
+  /** Error message for failed authentication. */
   const [error, setError] = useState("");
 
+  /**
+   * Handle input field changes.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - Input change event.
+   */
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  /**
+   * Handle form submission for login/signup.
+   * @param {React.FormEvent<HTMLFormElement>} e - Form submission event.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -42,25 +68,29 @@ export default function AuthPage({ onAuthSuccess }) {
     }
   };
 
+  /**
+   * Handle guest login (no authentication).
+   * Clears any stored user session and sets user to null.
+   */
   const handleGuest = () => {
-    localStorage.removeItem("user"); // clear any user session
-    onAuthSuccess?.(null); // guest mode
+    localStorage.removeItem("user");
+    onAuthSuccess?.(null);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-100 px-4">
+    <div className="min-h-screen w-screen flex items-center justify-center bg-gradient-to-br from-emerald-100 via-green-200 to-emerald-300">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8 w-full max-w-md"
+        className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-10 w-full max-w-md"
       >
         {/* Header */}
-        <div className="flex flex-col items-center mb-6">
-          <img src={LeafImg} alt="Leaf" className="w-12 h-12" />
-          <h1 className="mt-2 text-2xl font-bold text-emerald-900">
+        <div className="flex flex-col items-center mb-8">
+          <img src={LeafImg} alt="Leaf" className="w-14 h-14" />
+          <h1 className="mt-3 text-3xl font-extrabold text-emerald-900">
             {isLogin ? "Welcome Back!" : "Join EarthMed"}
           </h1>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 mt-1">
             {isLogin
               ? "Log in to continue exploring plants."
               : "Sign up to save your favorites."}
@@ -113,7 +143,7 @@ export default function AuthPage({ onAuthSuccess }) {
 
           {error && <p className="text-red-600 text-sm">{error}</p>}
 
-          {/* The submit button when you fill the info and click 'submit'*/}
+          {/* Submit button */}
           <motion.button
             whileTap={{ scale: 0.95 }}
             type="submit"

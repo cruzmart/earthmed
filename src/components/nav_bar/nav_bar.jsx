@@ -23,6 +23,7 @@ export default function NavBar({
   isOpen,
   setIsOpen,
   user,
+  view,
   onLoginClick,
   onSignOut,
   onNavigate,
@@ -58,8 +59,8 @@ export default function NavBar({
       <div className="relative h-20 flex items-center justify-center px-6">
         {/* Welcome message */}
         {user && (
-          <div className="absolute left-14 top-1 text-emerald-800 font-semibold">
-            Welcome {user.firstName} {user.lastName}!
+          <div className="absolute left-20 top-1/2 -translate-y-1/2 bg-emerald-100 text-emerald-900 px-4 py-1 rounded-lg shadow-md font-semibold text-sm md:text-base transition-all duration-300 hover:bg-emerald-200">
+            Welcome, {user.firstName} {user.lastName}!
           </div>
         )}
 
@@ -159,16 +160,18 @@ export default function NavBar({
         </div>
 
         {/* Right side: Filter button */}
-        <div className="absolute right-6 flex items-center">
-          <motion.div
-            whileHover={{ scale: 1.15 }}
-            whileTap={{ scale: 0.9 }}
-            className="p-2 rounded-full bg-white shadow hover:bg-emerald-50 cursor-pointer"
-            onClick={() => setIsOpen(true)} // open filter modal
-          >
-            <FaFilter className="w-5 h-5 text-emerald-700" />
-          </motion.div>
-        </div>
+        {view != "favorites" && (
+          <div className="absolute right-6 flex items-center">
+            <motion.div
+              whileHover={{ scale: 1.15 }}
+              whileTap={{ scale: 0.9 }}
+              className="p-2 rounded-full bg-white shadow hover:bg-emerald-50 cursor-pointer"
+              onClick={() => setIsOpen(true)} // open filter modal
+            >
+              <FaFilter className="w-5 h-5 text-emerald-700" />
+            </motion.div>
+          </div>
+        )}
       </div>
     </nav>
   );

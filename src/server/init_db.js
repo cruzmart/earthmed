@@ -1,8 +1,22 @@
 // src/server/init_db.js
 import mysql from "mysql2/promise";
 
+/**
+ * Initializes the database connection and ensures that the required tables exist.
+ * This includes `plants`, `accounts`, and `favorites`.
+ *
+ * @async
+ * @function initdb
+ * @returns {Promise<import("mysql2/promise").Connection>} Returns a promise that resolves
+ * to a MySQL connection object ready for queries.
+ *
+ * @example
+ * import { initdb } from "./init_db.js";
+ * const db = await initdb();
+ * const [rows] = await db.query("SELECT * FROM plants");
+ */
 export async function initdb() {
-  // This information is crucial to reconnect and work on the backend updating stuff btw.
+  // Connect to MySQL database
   const connection = await mysql.createConnection({
     host: "localhost",
     user: "plants123",
@@ -10,7 +24,7 @@ export async function initdb() {
     database: "plantsdb",
   });
 
-  // Ensure table exists
+  // Ensure 'plants' table exists
   await connection.execute(`
     CREATE TABLE IF NOT EXISTS plants (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -27,7 +41,7 @@ export async function initdb() {
     ) ENGINE=InnoDB;
   `);
 
-  // Ensure accounts table exists
+  // Ensure 'accounts' table exists
   await connection.execute(`
     CREATE TABLE IF NOT EXISTS accounts (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -38,7 +52,7 @@ export async function initdb() {
     ) ENGINE=InnoDB;
   `);
 
-  // Ensure favorites table exists
+  // Ensure 'favorites' table exists with foreign key constraints
   await connection.execute(`
     CREATE TABLE IF NOT EXISTS favorites (
       id INT AUTO_INCREMENT PRIMARY KEY,
