@@ -139,7 +139,7 @@ app.post("/api/signup", async (req, res) => {
   try {
     const [result] = await pool.execute(
       "INSERT INTO accounts (firstName, lastName, username, password) VALUES (?, ?, ?, ?)",
-      [firstName || "", lastName || "", username, password]
+      [firstName || "", lastName || "", username, password],
     );
     res.json({ message: "Signup successful", user: { id: result.insertId } });
   } catch (err) {
@@ -171,7 +171,7 @@ app.post("/api/login", async (req, res) => {
   try {
     const [rows] = await pool.execute(
       "SELECT id, firstName, lastName, username FROM accounts WHERE username=? AND password=?",
-      [username, password]
+      [username, password],
     );
 
     if (rows.length === 0)
@@ -200,7 +200,7 @@ app.get("/api/favorites/:user_id", async (req, res) => {
       `SELECT p.* FROM plants p
        JOIN favorites f ON p.id = f.plant_id
        WHERE f.user_id = ?`,
-      [user_id]
+      [user_id],
     );
     res.json(rows);
   } catch (err) {
@@ -228,25 +228,57 @@ app.post("/api/favorite/toggle", async (req, res) => {
   try {
     const [existing] = await pool.execute(
       "SELECT * FROM favorites WHERE user_id=? AND plant_id=?",
-      [user_id, plantId]
+      [user_id, plantId],
     );
 
     if (existing.length) {
       await pool.execute(
         "DELETE FROM favorites WHERE user_id=? AND plant_id=?",
-        [user_id, plantId]
+        [user_id, plantId],
       );
       return res.json({ message: "Removed from favorites", favorite: false });
     } else {
       await pool.execute(
         "INSERT INTO favorites (user_id, plant_id) VALUES (?, ?)",
-        [user_id, plantId]
+        [user_id, plantId],
       );
       return res.json({ message: "Added to favorites", favorite: true });
     }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to toggle favorite" });
+  }
+});
+
+/**
+ * GET /api/plants/trending
+ * Get top favorited plants (trending).
+ *
+ * @name GetTrendingPlants
+ * @route {GET} /api/plants/trending
+ * @query {number} [limit=3] - How many top plants to return
+ * @returns {Promise<Plant[]>} Array of top favorited plants with count
+ *
+ * @example
+ * GET /api/plants/trending?limit=5
+ */
+app.get("/api/plants/trending", async (req, res) => {
+  let limit = parseInt(req.query.limit, 10);
+  if (!limit || limit <= 0) limit = 3; // default to 3
+
+  try {
+    const [rows] = await pool.execute(`
+      SELECT p.*, COUNT(f.plant_id) AS favoritesCount FROM plants p
+      LEFT JOIN favorites f ON p.id = f.plant_id
+      GROUP BY p.id
+      ORDER BY favoritesCount DESC
+      LIMIT ${limit}
+    `);
+
+    res.json(rows); // always an array
+  } catch (err) {
+    console.error(err);
+    res.status(500).json([]); // fallback to empty array
   }
 });
 

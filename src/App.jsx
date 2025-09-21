@@ -5,6 +5,7 @@ import PlantsSlider from "./components/plants_slider";
 import FilterModal from "./components/nav_bar/filter_modal";
 import AuthPage from "./components/auth_page";
 import FavoritesPage from "./components/favourites/favourites_page";
+import TrendingPlants from "./components/trending_plants";
 import { AnimatePresence, motion } from "framer-motion";
 
 /**
@@ -142,13 +143,21 @@ function App() {
     switch (view) {
       case "home":
         return (
-          <div className="mt-10">
-            <PlantsSlider plants={plants} user={user} />
-            {plants.length === 0 && !isFilterOpen && (
-              <div className="text-center text-gray-600 mt-10 text-lg">
-                No plants match your search or filters.
-              </div>
-            )}
+          <div className="mt-10 flex gap-8 max-w-7xl mx-auto px-4">
+            {/* Left: Slider (takes remaining space) */}
+            <div className="flex-1">
+              <PlantsSlider plants={plants} user={user} />
+              {plants.length === 0 && !isFilterOpen && (
+                <div className="text-center text-gray-600 mt-10 text-lg">
+                  No plants match your search or filters.
+                </div>
+              )}
+            </div>
+
+            {/* Right: Trending (fixed smaller width) */}
+            <div className="w-[280px] flex-shrink-0">
+              <TrendingPlants />
+            </div>
           </div>
         );
       case "favorites":
@@ -192,10 +201,12 @@ function App() {
           />
 
           {/* Main content */}
-          <main className="flex-1">
-            <div className="pl-40 mt-25 flex justify-center">
-              {renderMainContent()}
-            </div>
+          <main
+            className={`flex-1 transition-all duration-300 ${
+              isFilterOpen ? "blur-sm pointer-events-none" : ""
+            }`}
+          >
+            {renderMainContent()}
           </main>
 
           {/* Filter Modal */}

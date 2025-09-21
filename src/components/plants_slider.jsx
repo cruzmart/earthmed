@@ -49,7 +49,7 @@ export default function PlantsSlider({ plants, user }) {
       if (!user) return;
       try {
         const res = await fetch(
-          `http://localhost:3001/api/favorites/${user.id}`
+          `http://localhost:3001/api/favorites/${user.id}`,
         );
         const data = await res.json();
         setFavorites(data.map((p) => p.id));
@@ -76,7 +76,9 @@ export default function PlantsSlider({ plants, user }) {
       const data = await res.json();
 
       setFavorites((prev) =>
-        data.favorite ? [...prev, plantId] : prev.filter((id) => id !== plantId)
+        data.favorite
+          ? [...prev, plantId]
+          : prev.filter((id) => id !== plantId),
       );
     } catch (err) {
       console.error("Failed to toggle favorite:", err);
@@ -100,10 +102,7 @@ export default function PlantsSlider({ plants, user }) {
           {createEmptySlides(Math.floor(fillerCount / 2), "left")}
 
           {plantList.map((plant) => (
-            <SwiperSlide
-              key={plant.id}
-              className="w-64 flex-shrink-0 p-4"
-            >
+            <SwiperSlide key={plant.id} className="w-64 flex-shrink-0 p-4">
               <div
                 className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transition-transform duration-300 cursor-pointer overflow-hidden"
                 onClick={() => setSelectedPlant(plant)}
@@ -136,7 +135,9 @@ export default function PlantsSlider({ plants, user }) {
 
                 {/* Plant Info */}
                 <div className="p-4">
-                  <h2 className="text-lg font-bold text-emerald-900">{plant.name}</h2>
+                  <h2 className="text-lg font-bold text-emerald-900">
+                    {plant.name}
+                  </h2>
                   <p className="text-sm text-gray-600 mt-1 line-clamp-3">
                     {plant.description}
                   </p>

@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaLeaf, FaSeedling, FaDollarSign, FaBook, FaGlobe } from "react-icons/fa";
+import {
+  FaLeaf,
+  FaSeedling,
+  FaDollarSign,
+  FaBook,
+  FaGlobe,
+} from "react-icons/fa";
 
 /**
  * Default plant object used when no plant data is provided.
@@ -75,7 +81,9 @@ export default function PlantProfileCard({ plant = defaultPlant }) {
         <div className="flex items-start gap-2">
           <FaLeaf className="text-emerald-700 mt-1" />
           <div>
-            <h2 className="text-sm font-semibold text-emerald-900">Health Benefit</h2>
+            <h2 className="text-sm font-semibold text-emerald-900">
+              Health Benefit
+            </h2>
             <p className="text-sm text-gray-700 mt-1">{plant.healthBenefit}</p>
           </div>
         </div>
@@ -150,7 +158,9 @@ export default function PlantProfileCard({ plant = defaultPlant }) {
         <div className="flex items-start gap-2">
           <FaGlobe className="text-emerald-700 mt-1" />
           <div>
-            <h2 className="text-sm font-semibold text-emerald-900">Found in Nature</h2>
+            <h2 className="text-sm font-semibold text-emerald-900">
+              Found in Nature
+            </h2>
             <p className="text-sm text-gray-700 mt-1">{plant.foundInNature}</p>
           </div>
         </div>
