@@ -3,15 +3,22 @@ import cors from "cors";
 import mysql from "mysql2/promise";
 import { initdb } from "./init_db.js";
 
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
+
+
 const app = express();
 app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
 
+const {host, user, password, database} = process.env;
 const dbConfig = {
-  host: "localhost",
-  user: "plants123",
-  password: "@+Plants1378201-",
-  database: "plantsdb",
+  host: host,
+  user: user,
+  password: password,
+  database: database,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,

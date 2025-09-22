@@ -1,5 +1,9 @@
 // src/server/init_db.js
 import mysql from "mysql2/promise";
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
 
 /**
  * Initializes the database connection and ensures that the required tables exist.
@@ -17,11 +21,12 @@ import mysql from "mysql2/promise";
  */
 export async function initdb() {
   // Connect to MySQL database
+  const {host, user, password, database} = process.env;
   const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "plants123",
-    password: "@+Plants1378201-",
-    database: "plantsdb",
+    host: host,
+    user: user,
+    password: password,
+    database: database,
   });
 
   // Ensure 'plants' table exists
