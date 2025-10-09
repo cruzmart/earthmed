@@ -1,62 +1,43 @@
+// src/server/server.js
 import express from "express";
 import cors from "cors";
 import mysql from "mysql2/promise";
 import { initdb } from "./init_db.js";
+import dotenv from "dotenv";
 
-import dotenv from 'dotenv';
-
-// Load environment variables from .env file
+// Load environment variables (.env or .env.production)
 dotenv.config();
 
-
 const app = express();
-app.use(cors({ origin: "http://localhost:5173" }));
+
+// Automatically choose correct CORS origin
+const allowedOrigin =
+  process.env.NODE_ENV === "production"
+    ? "https://earthmed.vercel.app"
+    : "http://localhost:5173";
+
+app.use(cors({ origin: allowedOrigin }));
 app.use(express.json());
 
-const {host, user, password, database} = process.env;
+// --- Database setup ---
+const { host, user, password, database } = process.env;
+
 const dbConfig = {
-  host: host,
-  user: user,
-  password: password,
-  database: database,
+  host,
+  user,
+  password,
+  database,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
 };
+
 const pool = mysql.createPool(dbConfig);
 
+// Initialize DB schema if needed
 await initdb();
 
-/**
- * @typedef {Object} Plant
- * @property {number} id
- * @property {string} name
- * @property {string} scientificName
- * @property {string} imageUrl
- * @property {string} description
- * @property {string} howToGrow
- * @property {string} healthBenefit
- * @property {string} foundInNature
- * @property {string} citation
- * @property {number} cost
- */
-
-/**
- * @typedef {Object} User
- * @property {number} id
- * @property {string} firstName
- * @property {string} lastName
- * @property {string} username
- */
-
-/**
- * GET /api/plants
- * Fetch all plants in the database.
- *
- * @name GetAllPlants
- * @route {GET} /api/plants
- * @returns {Promise<Plant[]>} Array of all plants in the database
- */
+// --- ROUTES BELOW ---
 app.get("/api/plants", async (req, res) => {
   try {
     const [rows] = await pool.execute("SELECT * FROM plants");
@@ -67,27 +48,6 @@ app.get("/api/plants", async (req, res) => {
   }
 });
 
-/**
- * POST /api/filter
- * Filter plants based on search terms and cost limit.
- *
- * @name FilterPlants
- * @route {POST} /api/filter
- * @param {Object} req.body
- * @param {string} [req.body.Name] - Filter by plant name or scientific name
- * @param {string} [req.body.Benefit] - Filter by health benefits
- * @param {string} [req.body.Description] - Filter by description keywords
- * @param {string} [req.body.Location] - Filter by foundInNature
- * @param {number} [req.body.Cost] - Maximum cost
- * @returns {Promise<Plant[]>} Array of plants matching filters
- *
- * @example
- * POST /api/filter
- * {
- *   "Name": "Mint",
- *   "Cost": 10
- * }
- */
 app.post("/api/filter", async (req, res) => {
   const filters = req.body;
   try {
@@ -102,7 +62,7 @@ app.post("/api/filter", async (req, res) => {
 
     if (searchTerms.length) {
       query += ` AND MATCH(name, scientificName, description, howToGrow, healthBenefit, foundInNature, citation)
-                AGAINST (? IN NATURAL LANGUAGE MODE)`;
+                 AGAINST (? IN NATURAL LANGUAGE MODE)`;
       params.push(searchTerms.join(" "));
     }
 
@@ -113,7 +73,7 @@ app.post("/api/filter", async (req, res) => {
 
     if (searchTerms.length) {
       query += ` ORDER BY MATCH(name, scientificName, description, howToGrow, healthBenefit, foundInNature, citation)
-                      AGAINST (? IN NATURAL LANGUAGE MODE) DESC`;
+                 AGAINST (? IN NATURAL LANGUAGE MODE) DESC`;
       params.push(searchTerms.join(" "));
     }
 
@@ -125,19 +85,6 @@ app.post("/api/filter", async (req, res) => {
   }
 });
 
-/**
- * POST /api/signup
- * Register a new user account.
- *
- * @name Signup
- * @route {POST} /api/signup
- * @param {Object} req.body
- * @param {string} [req.body.firstName] - User's first name
- * @param {string} [req.body.lastName] - User's last name
- * @param {string} req.body.username - Unique username
- * @param {string} req.body.password - User password
- * @returns {Promise<{message: string, user?: {id: number}}>} Success message and new user ID
- */
 app.post("/api/signup", async (req, res) => {
   const { firstName, lastName, username, password } = req.body;
   if (!username || !password)
@@ -159,17 +106,6 @@ app.post("/api/signup", async (req, res) => {
   }
 });
 
-/**
- * POST /api/login
- * Authenticate a user.
- *
- * @name Login
- * @route {POST} /api/login
- * @param {Object} req.body
- * @param {string} req.body.username
- * @param {string} req.body.password
- * @returns {Promise<{message: string, user?: User}>} Success message and user data
- */
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password)
@@ -191,15 +127,6 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-/**
- * GET /api/favorites/:user_id
- * Get all favorite plants for a specific user.
- *
- * @name GetFavorites
- * @route {GET} /api/favorites/:user_id
- * @param {string} req.params.user_id
- * @returns {Promise<Plant[]>} Array of favorited plants
- */
 app.get("/api/favorites/:user_id", async (req, res) => {
   const { user_id } = req.params;
   try {
@@ -216,17 +143,6 @@ app.get("/api/favorites/:user_id", async (req, res) => {
   }
 });
 
-/**
- * POST /api/favorite/toggle
- * Add or remove a plant from a user's favorites.
- *
- * @name ToggleFavorite
- * @route {POST} /api/favorite/toggle
- * @param {Object} req.body
- * @param {number} req.body.user_id
- * @param {number} req.body.plantId
- * @returns {Promise<{message: string, favorite: boolean}>} Status and new favorite state
- */
 app.post("/api/favorite/toggle", async (req, res) => {
   const { user_id, plantId } = req.body;
   if (!user_id || !plantId)
@@ -257,21 +173,9 @@ app.post("/api/favorite/toggle", async (req, res) => {
   }
 });
 
-/**
- * GET /api/plants/trending
- * Get top favorited plants (trending).
- *
- * @name GetTrendingPlants
- * @route {GET} /api/plants/trending
- * @query {number} [limit=3] - How many top plants to return
- * @returns {Promise<Plant[]>} Array of top favorited plants with count
- *
- * @example
- * GET /api/plants/trending?limit=5
- */
 app.get("/api/plants/trending", async (req, res) => {
   let limit = parseInt(req.query.limit, 10);
-  if (!limit || limit <= 0) limit = 3; // default to 3
+  if (!limit || limit <= 0) limit = 3;
 
   try {
     const [rows] = await pool.execute(`
@@ -282,18 +186,21 @@ app.get("/api/plants/trending", async (req, res) => {
       LIMIT ${limit}
     `);
 
-    res.json(rows); // always an array
+    res.json(rows);
   } catch (err) {
     console.error(err);
-    res.status(500).json([]); // fallback to empty array
+    res.status(500).json([]);
   }
 });
 
-const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`🌱 Server running on http://localhost:${PORT}`);
-});
+// --- Only start the server locally ---
+const PORT = process.env.PORT || 3001;
 
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`🌱 Server running on http://localhost:${PORT}`);
+  });
+}
 
-
+// Export for Vercel
 export default app;
