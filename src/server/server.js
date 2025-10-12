@@ -28,7 +28,7 @@ const pool = mysql.createPool({
   password: PASSWORD,
   database: DATABASE,
   port: PORT ? Number(PORT) : 3306,
-  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : undefined,
+  ssl:{ rejectUnauthorized: false },
   waitForConnections: true,
   connectionLimit: 10,
 });
