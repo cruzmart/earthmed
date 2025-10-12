@@ -35,7 +35,7 @@ const pool = mysql.createPool({
 });
 
 // Initialize tables on startup
-(async () => {
+let dbReady = (async () => {
   try {
     console.log("🛠 Initializing database...");
      await pool.execute(`
@@ -107,20 +107,9 @@ const pool = mysql.createPool({
 })();
 
 
-// Manual seeding route (run once, then remove)
-app.post("/api/admin/seed", async (req, res) => {
-  try {
-    await seedPlants();
-    res.json({ message: "🌱 Plants seeded successfully!" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Seeding failed" });
-  }
-});
-
-
 // --- ROUTES BELOW ---
 app.get("/api/plants", async (req, res) => {
+  await dbReady;
   try {
     const [rows] = await pool.execute("SELECT * FROM plants");
     res.json(rows);
@@ -129,6 +118,7 @@ app.get("/api/plants", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch plants" });
   }
 });
+
 
 app.post("/api/filter", async (req, res) => {
   const filters = req.body;
