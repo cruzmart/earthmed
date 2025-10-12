@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import FavoritesModal from "./favourites_modal";
+import { EARTH_MED_URL } from "../../global";
 
 /**
  * FavoritesPage component
@@ -33,7 +34,7 @@ export default function FavoritesPage({ user }) {
     const fetchFavorites = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3001/api/favorites/${user.id}`,
+          `${EARTH_MED_URL}/api/favorites/${user.id}`,
         );
         const data = await res.json();
         setFavorites(data);
@@ -55,7 +56,7 @@ export default function FavoritesPage({ user }) {
    */
   const toggleFavorite = async (plantId) => {
     try {
-      const res = await fetch("http://localhost:3001/api/favorite/toggle", {
+      const res = await fetch("{EARTH_MED_URL}/api/favorite/toggle", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: user.id, plantId }),

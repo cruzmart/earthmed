@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 
 import LeafImg from "../assets/leaflog.svg";
+import { EARTH_MED_URL } from "../global";
 
 /**
  * Authentication page component.
@@ -49,7 +50,7 @@ export default function AuthPage({ onAuthSuccess }) {
 
     try {
       const endpoint = isLogin ? "/api/login" : "/api/signup";
-      const response = await fetch(`http://localhost:3001${endpoint}`, {
+      const response = await fetch(`${EARTH_MED_URL}${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

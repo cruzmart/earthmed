@@ -1,0 +1,1 @@
+export const EARTH_MED_URL = NODE_ENV === "production" ? "https://earthmed.vercel.app" : "http://localhost:517";

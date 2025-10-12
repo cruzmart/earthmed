@@ -3,9 +3,6 @@ import express from "express";
 import cors from "cors";
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
-import { plants } from "../data/plants.js";
-import { initdb } from "./init_db.js";
-
 
 dotenv.config();
 

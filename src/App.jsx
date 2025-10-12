@@ -86,7 +86,7 @@ function App() {
   useEffect(() => {
     const fetchAllPlants = async () => {
       try {
-        const res = await fetch("http://localhost:3001/api/plants");
+        const res = await fetch(`${EARTH_MED_URL}/api/plants`);
         const data = await res.json();
         setPlants(data);
       } catch (err) {
@@ -105,7 +105,7 @@ function App() {
     setIsFilterOpen(false);
 
     try {
-      const res = await fetch("http://localhost:3001/api/filter", {
+      const res = await fetch(`${EARTH_MED_URL}/api/filter`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(filters),

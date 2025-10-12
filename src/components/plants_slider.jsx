@@ -4,6 +4,7 @@ import { Keyboard } from "swiper/modules";
 import "swiper/css";
 import { FaHeart } from "react-icons/fa";
 import PlantProfileCard from "./plant_profile";
+import { EARTH_MED_URL } from "../global";
 
 /**
  * Helper to create invisible filler slides to maintain carousel alignment
@@ -49,7 +50,7 @@ export default function PlantsSlider({ plants, user }) {
       if (!user) return;
       try {
         const res = await fetch(
-          `http://localhost:3001/api/favorites/${user.id}`,
+          `${EARTH_MED_URL}/api/favorites/${user.id}`,
         );
         const data = await res.json();
         setFavorites(data.map((p) => p.id));
@@ -68,7 +69,7 @@ export default function PlantsSlider({ plants, user }) {
   const toggleFavorite = async (plantId) => {
     if (!user) return;
     try {
-      const res = await fetch("http://localhost:3001/api/favorite/toggle", {
+      const res = await fetch(`${EARTH_MED_URL}/api/favorite/toggle`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: user.id, plantId }),

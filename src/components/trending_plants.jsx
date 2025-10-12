@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FaCrown } from "react-icons/fa";
 import PlantProfileCard from "./plant_profile";
 import LeafImg from "../assets/leaflog.svg";
+import { EARTH_MED_URL } from "../global";
 
 /**
  * TrendingPlants component displays the top favorited plants
@@ -30,7 +31,7 @@ export default function TrendingPlants({ limit = 3 }) {
     const fetchTrending = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3001/api/plants/trending?limit=${limit}`,
+          `${EARTH_MED_URL}/api/plants/trending?limit=${limit}`,
         );
         const data = await res.json();
         setTrending(data);
