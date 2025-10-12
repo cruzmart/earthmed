@@ -35,7 +35,12 @@ const dbConfig = {
 const pool = mysql.createPool(dbConfig);
 
 // Initialize DB schema if needed
-await initdb();
+// await initdb();
+// Initialize DB schema if needed (safe for serverless cold starts)
+initdb().catch(err => {
+  console.error("DB init failed:", err);
+});
+
 
 // --- ROUTES BELOW ---
 app.get("/api/plants", async (req, res) => {
