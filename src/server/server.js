@@ -121,6 +121,7 @@ app.get("/api/plants", async (req, res) => {
 
 
 app.post("/api/filter", async (req, res) => {
+  await dbReady;
   const filters = req.body;
   try {
     let query = `SELECT * FROM plants WHERE 1`;
@@ -158,6 +159,7 @@ app.post("/api/filter", async (req, res) => {
 });
 
 app.post("/api/signup", async (req, res) => {
+  await dbReady;
   const { firstName, lastName, username, password } = req.body;
   if (!username || !password)
     return res.status(400).json({ error: "Username & password required" });
@@ -179,6 +181,7 @@ app.post("/api/signup", async (req, res) => {
 });
 
 app.post("/api/login", async (req, res) => {
+  await dbReady;
   const { username, password } = req.body;
   if (!username || !password)
     return res.status(400).json({ error: "Username & password required" });
@@ -200,6 +203,7 @@ app.post("/api/login", async (req, res) => {
 });
 
 app.get("/api/favorites/:user_id", async (req, res) => {
+  await dbReady;
   const { user_id } = req.params;
   try {
     const [rows] = await pool.execute(
@@ -216,6 +220,7 @@ app.get("/api/favorites/:user_id", async (req, res) => {
 });
 
 app.post("/api/favorite/toggle", async (req, res) => {
+  await dbReady;
   const { user_id, plantId } = req.body;
   if (!user_id || !plantId)
     return res.status(400).json({ error: "user_id and plantId required" });
@@ -246,6 +251,7 @@ app.post("/api/favorite/toggle", async (req, res) => {
 });
 
 app.get("/api/plants/trending", async (req, res) => {
+  await dbReady;
   let limit = parseInt(req.query.limit, 10);
   if (!limit || limit <= 0) limit = 3;
 
