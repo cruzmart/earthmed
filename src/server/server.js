@@ -2,17 +2,15 @@
 import express from "express";
 import cors from "cors";
 import mysql from "mysql2/promise";
-// import { initdb } from "./init_db.js";
-import {seedPlants} from "./seed_plants.js" 
 import dotenv from "dotenv";
+import { initdb } from "./init_db.js";
+import { seedPlants } from "./seed_plants.js";
 
-// Load environment variables (.env or .env.production)
 dotenv.config();
 
 const app = express();
 
-
-// Automatically choose correct CORS origin
+// CORS setup
 const allowedOrigin =
   process.env.NODE_ENV === "production"
     ? "https://earthmed.vercel.app"
@@ -21,24 +19,40 @@ const allowedOrigin =
 app.use(cors({ origin: allowedOrigin }));
 app.use(express.json());
 
-// --- Database setup ---
-const { host, user, password, database } = process.env;
+// Database connection pool
+const { HOST, USER, PASSWORD, DATABASE, PORT } = process.env;
 
-const dbConfig = {
-  host,
-  user,
-  password,
-  database,
+const pool = mysql.createPool({
+  host: HOST,
+  user: USER,
+  password: PASSWORD,
+  database: DATABASE,
+  port: PORT ? Number(PORT) : 3306,
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : undefined,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
-};
+});
 
-const pool = mysql.createPool(dbConfig);
+// Initialize tables on startup
+(async () => {
+  try {
+    const db = await initdb();
+    await db.end();
+    console.log("✅ Database initialized");
+  } catch (err) {
+    console.error("❌ Database initialization failed:", err);
+  }
+})();
 
-
-seedPlants().catch(err => {
-  console.error("DB init failed:", err);
+// Manual seeding route (run once, then remove)
+app.post("/api/admin/seed", async (req, res) => {
+  try {
+    await seedPlants();
+    res.json({ message: "🌱 Plants seeded successfully!" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Seeding failed" });
+  }
 });
 
 
@@ -199,11 +213,10 @@ app.get("/api/plants/trending", async (req, res) => {
 });
 
 // --- Only start the server locally ---
-const PORT = process.env.PORT || 3001;
-
+const LOCAL_PORT = process.env.PORT || 3001;
 if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT, () => {
-    console.log(`🌱 Server running on http://localhost:${PORT}`);
+  app.listen(LOCAL_PORT, () => {
+    console.log(`🌱 Server running on http://localhost:${LOCAL_PORT}`);
   });
 }
 

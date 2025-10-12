@@ -1,35 +1,27 @@
 // src/server/init_db.js
 import mysql from "mysql2/promise";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
-// Load environment variables from .env file
 dotenv.config();
 
 /**
- * Initializes the database connection and ensures that the required tables exist.
- * This includes `plants`, `accounts`, and `favorites`.
- *
- * @async
- * @function initdb
- * @returns {Promise<import("mysql2/promise").Connection>} Returns a promise that resolves
- * to a MySQL connection object ready for queries.
- *
- * @example
- * import { initdb } from "./init_db.js";
- * const db = await initdb();
- * const [rows] = await db.query("SELECT * FROM plants");
+ * Initialize database and ensure required tables exist.
  */
 export async function initdb() {
-  // Connect to MySQL database
-  const {host, user, password, database} = process.env;
+  const { HOST, USER, PASSWORD, DATABASE, PORT } = process.env;
+
   const connection = await mysql.createConnection({
-    host: host,
-    user: user,
-    password: password,
-    database: database,
+    host: HOST,
+    user: USER,
+    password: PASSWORD,
+    database: DATABASE,
+    port: PORT ? Number(PORT) : 3306,
+    ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : undefined,
   });
 
-  // Ensure 'plants' table exists
+  console.log("✅ Connected to database:", HOST);
+
+  // Create tables if missing
   await connection.execute(`
     CREATE TABLE IF NOT EXISTS plants (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -46,7 +38,6 @@ export async function initdb() {
     ) ENGINE=InnoDB;
   `);
 
-  // Ensure 'accounts' table exists
   await connection.execute(`
     CREATE TABLE IF NOT EXISTS accounts (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -57,7 +48,6 @@ export async function initdb() {
     ) ENGINE=InnoDB;
   `);
 
-  // Ensure 'favorites' table exists with foreign key constraints
   await connection.execute(`
     CREATE TABLE IF NOT EXISTS favorites (
       id INT AUTO_INCREMENT PRIMARY KEY,
