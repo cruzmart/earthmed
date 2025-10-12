@@ -1,7 +1,7 @@
 import { plants } from "../data/plants.js";
 import { initdb } from "./init_db.js"; // My connection + table setup
 
-async function seedPlants() {
+export async function seedPlants() {
   const db = await initdb(); //
 
   for (const plant of plants) {

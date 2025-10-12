@@ -2,13 +2,16 @@
 import express from "express";
 import cors from "cors";
 import mysql from "mysql2/promise";
-import { initdb } from "./init_db.js";
+// import { initdb } from "./init_db.js";
+import {seedPlants} from "./seed_plants.js" 
 import dotenv from "dotenv";
 
 // Load environment variables (.env or .env.production)
 dotenv.config();
 
 const app = express();
+
+
 
 // Automatically choose correct CORS origin
 const allowedOrigin =
@@ -37,7 +40,9 @@ const pool = mysql.createPool(dbConfig);
 // Initialize DB schema if needed
 // await initdb();
 // Initialize DB schema if needed (safe for serverless cold starts)
-initdb().catch(err => {
+
+
+seedPlants().catch(err => {
   console.error("DB init failed:", err);
 });
 
