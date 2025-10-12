@@ -36,13 +36,18 @@ const pool = mysql.createPool({
 // Initialize tables on startup
 (async () => {
   try {
+    console.log("🛠 Initializing database...");
     const db = await initdb();
     await db.end();
-    console.log("✅ Database initialized");
+
+    console.log("🌱 Checking and seeding plants...");
+    await seedPlants();
+    console.log("✅ Database and plants ready!");
   } catch (err) {
-    console.error("❌ Database initialization failed:", err);
+    console.error("❌ Database setup or seeding failed:", err);
   }
 })();
+
 
 // Manual seeding route (run once, then remove)
 app.post("/api/admin/seed", async (req, res) => {
