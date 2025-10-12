@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 /**
- * Initialize database and ensure required tables exist..
+ * Initialize database and ensure required tables exist...
  */
 export async function initdb() {
   const { HOST, USER, PASSWORD, DATABASE, PORT } = process.env;
