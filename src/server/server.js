@@ -12,7 +12,6 @@ dotenv.config();
 const app = express();
 
 
-
 // Automatically choose correct CORS origin
 const allowedOrigin =
   process.env.NODE_ENV === "production"
@@ -36,10 +35,6 @@ const dbConfig = {
 };
 
 const pool = mysql.createPool(dbConfig);
-
-// Initialize DB schema if needed
-// await initdb();
-// Initialize DB schema if needed (safe for serverless cold starts)
 
 
 seedPlants().catch(err => {
