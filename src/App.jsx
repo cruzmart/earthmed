@@ -8,6 +8,8 @@ import FavoritesPage from "./components/favourites/favourites_page";
 import TrendingPlants from "./components/trending_plants";
 import { AnimatePresence, motion } from "framer-motion";
 
+import { EARTH_MED_URL } from "./global";
+
 /**
  * @typedef {Object} Filters
  * @property {string} Name - Filter by plant name
