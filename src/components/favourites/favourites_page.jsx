@@ -56,7 +56,7 @@ export default function FavoritesPage({ user }) {
    */
   const toggleFavorite = async (plantId) => {
     try {
-      const res = await fetch("{EARTH_MED_URL}/api/favorite/toggle", {
+      const res = await fetch(`{EARTH_MED_URL}/api/favorite/toggle`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: user.id, plantId }),
