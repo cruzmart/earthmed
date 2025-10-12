@@ -34,82 +34,12 @@ const pool = mysql.createPool({
   connectionLimit: 10,
 });
 
-// Initialize tables on startup
-let dbReady = (async () => {
-  try {
-    console.log("🛠 Initializing database...");
-     await pool.execute(`
-    CREATE TABLE IF NOT EXISTS plants (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(255),
-      scientificName VARCHAR(255),
-      imageUrl TEXT,
-      description TEXT,
-      howToGrow TEXT,
-      healthBenefit TEXT,
-      foundInNature TEXT,
-      citation TEXT,
-      cost DECIMAL(10,2),
-      FULLTEXT(name, scientificName, description, howToGrow, healthBenefit, foundInNature, citation)
-    ) ENGINE=InnoDB;
-  `);
-
-  await pool.execute(`
-    CREATE TABLE IF NOT EXISTS accounts (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      firstName VARCHAR(100),
-      lastName VARCHAR(100),
-      username VARCHAR(100) UNIQUE NOT NULL,
-      password VARCHAR(255) NOT NULL
-    ) ENGINE=InnoDB;
-  `);
-
-  await pool.execute(`
-    CREATE TABLE IF NOT EXISTS favorites (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      user_id INT NOT NULL,
-      plant_id INT NOT NULL,
-      FOREIGN KEY (user_id) REFERENCES accounts(id) ON DELETE CASCADE,
-      FOREIGN KEY (plant_id) REFERENCES plants(id) ON DELETE CASCADE,
-      UNIQUE KEY unique_fav (user_id, plant_id)
-    ) ENGINE=InnoDB;
-  `);
-
-  for (const plant of plants) {
-    const [rows] = await pool.execute(
-      `SELECT id FROM plants WHERE scientificName = ?`,
-      [plant.scientificName]
-    );
-
-    if (rows.length === 0) {
-      await pool.execute(
-        `INSERT INTO plants
-          (name, scientificName, imageUrl, description, howToGrow, healthBenefit, foundInNature, citation, cost)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          plant.name,
-          plant.scientificName,
-          plant.imageUrl,
-          plant.description,
-          plant.howToGrow,
-          plant.healthBenefit,
-          plant.foundInNature,
-          plant.citation,
-          plant.cost,
-        ]
-      );
-    }}
-
-    console.log("✅ Database and plants ready!");
-  } catch (err) {
-    console.error("❌ Database setup or seeding failed:", err);
-  }
-})();
+const [dbInfo] = await pool.query("SELECT DATABASE() AS dbName");
+console.log("🧩 Connected to database:", dbInfo[0].dbName);
 
 
 // --- ROUTES BELOW ---
 app.get("/api/plants", async (req, res) => {
-  await dbReady;
   try {
     const [rows] = await pool.execute("SELECT * FROM plants");
     res.json(rows);
@@ -121,7 +51,6 @@ app.get("/api/plants", async (req, res) => {
 
 
 app.post("/api/filter", async (req, res) => {
-  await dbReady;
   const filters = req.body;
   try {
     let query = `SELECT * FROM plants WHERE 1`;
@@ -159,7 +88,6 @@ app.post("/api/filter", async (req, res) => {
 });
 
 app.post("/api/signup", async (req, res) => {
-  await dbReady;
   const { firstName, lastName, username, password } = req.body;
   if (!username || !password)
     return res.status(400).json({ error: "Username & password required" });
@@ -181,7 +109,6 @@ app.post("/api/signup", async (req, res) => {
 });
 
 app.post("/api/login", async (req, res) => {
-  await dbReady;
   const { username, password } = req.body;
   if (!username || !password)
     return res.status(400).json({ error: "Username & password required" });
@@ -203,7 +130,6 @@ app.post("/api/login", async (req, res) => {
 });
 
 app.get("/api/favorites/:user_id", async (req, res) => {
-  await dbReady;
   const { user_id } = req.params;
   try {
     const [rows] = await pool.execute(
@@ -220,7 +146,6 @@ app.get("/api/favorites/:user_id", async (req, res) => {
 });
 
 app.post("/api/favorite/toggle", async (req, res) => {
-  await dbReady;
   const { user_id, plantId } = req.body;
   if (!user_id || !plantId)
     return res.status(400).json({ error: "user_id and plantId required" });
@@ -251,7 +176,6 @@ app.post("/api/favorite/toggle", async (req, res) => {
 });
 
 app.get("/api/plants/trending", async (req, res) => {
-  await dbReady;
   let limit = parseInt(req.query.limit, 10);
   if (!limit || limit <= 0) limit = 3;
 
